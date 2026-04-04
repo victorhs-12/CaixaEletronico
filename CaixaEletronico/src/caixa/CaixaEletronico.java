@@ -13,13 +13,17 @@ public class CaixaEletronico implements ICaixaEletronico{
 	
 	private int cotaMinima = 0;
 	
-	//neste metodo, esse loop vai ler todo o array que está guardado as notas e a quantidade delas, e vai mostrar to
+	private int calcularTotal() {
+		int totalCaixa = 0;
+		for(int i = 0; i < cedulas.length; i++) {
+			totalCaixa += cedulas[i][0] * cedulas[i][1];
+			}
+		
+		return totalCaixa;
+	}
+
 	public String pegaValorTotalDisponivel() {
-		int total = 0;
-		for(int i = 0; i < cedulas.length; i++ ) {
-			total += cedulas[i][0] * cedulas[i][1];
-		}
-		return "Total: R$ " + total;
+		return "Total: R$ " + calcularTotal();
 	}
 	
 	//neste método, ele percorre toda a matriz onde está as cédulas, e eu coloquei o return dentro do loop para moostar todas as cédulas e a quantidade delas
@@ -55,5 +59,47 @@ public class CaixaEletronico implements ICaixaEletronico{
 		else {
 			return "Cédula não encontrada";
 		}
+	}
+
+	public String sacar(Integer valor) {
+		if((calcularTotal() - valor) < cotaMinima) {
+			return "Caixa Vazio: chame um operador";
+		}
+		
+		int [] notasUsadas = new int[6];
+		int valorRestante = valor;
+		int totalCedulas = 0;
+		
+		for(int i = 0; i < cedulas.length; i++) {
+			int cabemPeloValor = valorRestante / cedulas[i][0];
+			int cabemPeloEstoque = cedulas[i][1];
+			int cabemPeloLimite = 30 - totalCedulas;
+			
+			
+			int notasAUsar = Math.min(cabemPeloValor, Math.min(cabemPeloEstoque, cabemPeloLimite));
+			notasUsadas[i] = notasAUsar;
+			valorRestante -= notasAUsar * cedulas[i][0];
+			totalCedulas += notasAUsar;
+			
+			
+		}
+		if(valorRestante == 0) {
+			StringBuilder sb2 = new StringBuilder();
+			for(int i = 0; i < cedulas.length; i++) {
+				cedulas[i][1] -= notasUsadas[i];
+				
+			}
+			for(int i = 0; i < cedulas.length; i++) {
+				if(notasUsadas[i] > 0) {
+					sb2.append(String.format("Quantidade de RS%d usadas: %d unidades\n", cedulas[i][0], notasUsadas[i]));
+				}
+			}
+			return sb2.toString();
+			
+		}
+		else {
+			return "Saque não realizado por falta de cédulas";
+		}
+		
 	}
 }
