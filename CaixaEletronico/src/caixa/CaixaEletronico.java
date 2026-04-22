@@ -1,5 +1,7 @@
 package caixa;
 
+import java.util.ArrayList;
+
 public class CaixaEletronico implements ICaixaEletronico{
 	//aqui vai ser o coração do caixa eletrônico, porque neste array, está guardado as notas e a quantidade total delas
 	private int[][] cedulas = {
@@ -12,6 +14,8 @@ public class CaixaEletronico implements ICaixaEletronico{
 	};
 	
 	private int cotaMinima = 0;
+	
+	private ArrayList<String> historico = new ArrayList<>();
 	
 	private int calcularTotal() {
 		int totalCaixa = 0;
@@ -63,12 +67,13 @@ public class CaixaEletronico implements ICaixaEletronico{
 
 	public String sacar(Integer valor) {
 		if((calcularTotal() - valor) < cotaMinima) {
-			return "Caixa Vazio: chame um operador";
+			return "Caixa Vazio: Chame o operador";
 		}
 		
 		int [] notasUsadas = new int[6];
 		int valorRestante = valor;
 		int totalCedulas = 0;
+		int saldoAntes = calcularTotal();
 		
 		for(int i = 0; i < cedulas.length; i++) {
 			int cabemPeloValor = valorRestante / cedulas[i][0];
@@ -83,6 +88,7 @@ public class CaixaEletronico implements ICaixaEletronico{
 			
 			
 		}
+
 		if(valorRestante == 0) {
 			StringBuilder sb2 = new StringBuilder();
 			for(int i = 0; i < cedulas.length; i++) {
@@ -91,9 +97,11 @@ public class CaixaEletronico implements ICaixaEletronico{
 			}
 			for(int i = 0; i < cedulas.length; i++) {
 				if(notasUsadas[i] > 0) {
-					sb2.append(String.format("Quantidade de RS%d usadas: %d unidades\n", cedulas[i][0], notasUsadas[i]));
+					sb2.append(String.format("Quantidade de R$ %d usadas: %d unidades\n", cedulas[i][0], notasUsadas[i]));
+
 				}
 			}
+			historico.add(String.format("Saque realizado no valor de R$ %d\n Saldo anterior: R$ %d\n Saldo atual: R$ %d", valor, saldoAntes, calcularTotal()));
 			return sb2.toString();
 			
 		}
@@ -101,5 +109,25 @@ public class CaixaEletronico implements ICaixaEletronico{
 			return "Saque não realizado por falta de cédulas";
 		}
 		
+		
+	}
+	
+	public String mostraExtrato() {
+		StringBuilder sb3 = new StringBuilder();
+		if(historico.isEmpty()) {
+			return "Não houve movimentações nesta conta";
+		}
+		else {
+			for(String movimentacao : historico) {
+				sb3.append(movimentacao);
+				sb3.append(String.format("\n------------------------------\n"));
+			}
+		}
+		return sb3.toString();
+	}
+	
+	
+	public static void main(String[] args) {
+		//aqui vai chamar a interface com o GUI
 	}
 }
