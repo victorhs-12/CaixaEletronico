@@ -50,6 +50,10 @@ public class CaixaEletronico implements ICaixaEletronico{
 	 */
 	public String reposicaoCedulas(Integer cedula, Integer quantidade) {
 		boolean encontrou = false;
+		if(quantidade == null || quantidade == 0 || quantidade < 0) {
+			return "Não vai ser possível fazer a reposição de cédulas. Tente novamente";
+		}
+		
 		for(int i = 0; i < cedulas.length; i++) {
 			if(cedula.equals(cedulas[i][0])) {
 				cedulas[i][1] += quantidade;
@@ -63,9 +67,13 @@ public class CaixaEletronico implements ICaixaEletronico{
 		else {
 			return "Cédula não encontrada";
 		}
+		
 	}
 
 	public String sacar(Integer valor) {
+		if(valor == null || valor == 0 || valor < 0) {
+			return "Impossível realizar o saque deste valor. Tente novamente";
+		}
 		if((calcularTotal() - valor) < cotaMinima) {
 			return "Caixa Vazio: Chame o operador";
 		}
@@ -82,10 +90,10 @@ public class CaixaEletronico implements ICaixaEletronico{
 			
 			
 			int notasAUsar = Math.min(cabemPeloValor, Math.min(cabemPeloEstoque, cabemPeloLimite));
+
 			notasUsadas[i] = notasAUsar;
 			valorRestante -= notasAUsar * cedulas[i][0];
 			totalCedulas += notasAUsar;
-			
 			
 		}
 
@@ -93,12 +101,12 @@ public class CaixaEletronico implements ICaixaEletronico{
 			StringBuilder sb2 = new StringBuilder();
 			for(int i = 0; i < cedulas.length; i++) {
 				cedulas[i][1] -= notasUsadas[i];
-				
+
 			}
 			for(int i = 0; i < cedulas.length; i++) {
 				if(notasUsadas[i] > 0) {
 					sb2.append(String.format("Quantidade de R$ %d usadas: %d unidades\n", cedulas[i][0], notasUsadas[i]));
-
+					
 				}
 			}
 			historico.add(String.format("Saque realizado no valor de R$ %d\n Saldo anterior: R$ %d\n Saldo atual: R$ %d", valor, saldoAntes, calcularTotal()));
@@ -129,5 +137,6 @@ public class CaixaEletronico implements ICaixaEletronico{
 	
 	public static void main(String[] args) {
 		//aqui vai chamar a interface com o GUI
+
 	}
 }
