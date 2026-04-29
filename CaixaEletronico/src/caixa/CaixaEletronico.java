@@ -14,7 +14,7 @@ public class CaixaEletronico implements ICaixaEletronico{
 	};
 	
 	private int cotaMinima = 0;
-	
+	private int limiteMinimo = 45;
 	private ArrayList<String> historico = new ArrayList<>();
 	
 	private int calcularTotal() {
@@ -110,6 +110,7 @@ public class CaixaEletronico implements ICaixaEletronico{
 				}
 			}
 			historico.add(String.format("Saque realizado no valor de R$ %d\n Saldo anterior: R$ %d\n Saldo atual: R$ %d", valor, saldoAntes, calcularTotal()));
+			verificaEstoqueBaixo();
 			return sb2.toString();
 			
 		}
@@ -132,6 +133,17 @@ public class CaixaEletronico implements ICaixaEletronico{
 			}
 		}
 		return sb3.toString();
+	}
+	
+	
+	private void verificaEstoqueBaixo() {
+
+		
+		for(int i = 0; i < cedulas.length; i++) {
+			if(cedulas[i][1] < limiteMinimo) {
+				historico.add(String.format("A cédula de R$ %d precisa ser recarregada. Quantidade atual: %d unidades", cedulas[i][0], cedulas[i][1]));
+			}
+		}
 	}
 	
 	
