@@ -17,6 +17,7 @@ public class CaixaEletronico implements ICaixaEletronico{
 	private int limiteMinimo = 45;
 	private ArrayList<String> historico = new ArrayList<>();
 	
+	//este método calcula o valor total do caixa eletrônico.
 	private int calcularTotal() {
 		int totalCaixa = 0;
 		for(int i = 0; i < cedulas.length; i++) {
@@ -69,7 +70,10 @@ public class CaixaEletronico implements ICaixaEletronico{
 		}
 		
 	}
-
+	
+	/*neste método, faz o saque do valor, entregando da cédula maior para a menor, independente do valor. Colocamos verificações defensivas antes de realizar
+	 * este método, colocamos também um array temporário para gravar as movimentações do caixa
+	 */
 	public String sacar(Integer valor) {
 		if(valor == null || valor == 0 || valor < 0) {
 			return "Impossível realizar o saque deste valor. Tente novamente";
@@ -135,7 +139,7 @@ public class CaixaEletronico implements ICaixaEletronico{
 		return sb3.toString();
 	}
 	
-	
+	//neste método, declarei uma variável que representa um limite mínimo, que se uma das cédulas ultrapassar este limite, gera uma notificação, falando para fazer a reposição
 	private void verificaEstoqueBaixo() {
 
 		
