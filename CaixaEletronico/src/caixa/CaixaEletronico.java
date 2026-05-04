@@ -74,8 +74,8 @@ public class CaixaEletronico implements ICaixaEletronico{
 		if(valor == null || valor == 0 || valor < 0) {
 			return "Impossível realizar o saque deste valor. Tente novamente";
 		}
-		if((calcularTotal() - valor) < cotaMinima) {
-			return "Caixa Vazio: Chame o operador";
+		if(valor < cotaMinima) {
+			return "Não é possivel fazer o saque, pois o valor mínimo para retirar é de R$ " + cotaMinima;
 		}
 		
 		int [] notasUsadas = new int[6];
